@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[english,russian]{babel}
+\usepackage{etoolbox}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{ragged2e}
+
+\makeatletter
+
+% Хранилище для терминов
+\newcommand{\glossarylist}{}
+\newcounter{termcounter}
+
+% Команда для добавления термина
+\newcommand{\newterm}[2]{%
+  \refstepcounter{termcounter}% Сначала увеличиваем счетчик
+  \textbf{#1}% Жирный термин в тексте
+  \textit{— #2}% Курсивное определение
+  \textnormal{[\thetermcounter]}% Номер термина в квадратных скобках
+  \label{term:\thetermcounter}%
+  \protected@edef\glstemp{%
+    \noexpand\gappto\noexpand\glossarylist{%
+      \unexpanded{\parbox[t]{\linewidth}{\bfseries\RaggedRight #1}} & 
+      \unexpanded{\parbox[t]{\linewidth}{\RaggedRight #2}} & 
+      (\thetermcounter, стр. \noexpand\pageref{term:\thetermcounter})\noexpand\\
+      \noexpand\hline
+    }%
+  }%
+  \glstemp
+}
+
+% Вывод глоссария
+\newcommand{\printglossary}{%
+  \section*{Глоссарий}
+  \begin{longtable}{
+    @{\extracolsep{\fill}}
+    p{0.3\linewidth}
+    p{0.6\linewidth}
+    r
+    @{}
+  }
+    \hline
+    \textbf{Термин} & \textbf{Определение} & \textbf{Стр.} \\
+    \hline
+    \endhead
+    \glossarylist
+  \end{longtable}%
+}
+
+\makeatother
+
+\begin{document}
+
+\section{Пример}
+
+\begin{enumerate}
+\item \newterm{Очень Длинный Термин С Проблемами Переноса}{Пример определения, которое должно корректно переноситься на новую строку в таблице глоссария без наезжания на другие колонки.\\\
+И при этом переносится само по себе в рамках себя изнутри.\\}
+
+\newpage
+
+\item \newterm{Нормальный термин}{Обычное определение}
+\end{enumerate}
+
+\printglossary
+
+\end{document}

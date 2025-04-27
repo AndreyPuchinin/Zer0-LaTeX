@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{hyperref}
+
+% Защищаем команды от babel
+\usepackage{etoolbox}
+\makeatletter
+
+% Создаем внутренний список для терминов
+\newcommand{\glossaryentries}{}
+\newcommand{\term}[2]{%
+    % Добавляем термин в глоссарий
+    \hypertarget{gls:#1}{}%
+    \label{gls:#1}%
+    \protected@xdef\glossaryentries{%
+        \glossaryentries%
+        \item[\hyperlink{term:#1}{\textbf{#1}}:] #2 \dotfill стр.~\pageref*{term:#1}%
+    }%
+    % Выводим термин в тексте
+    \hypertarget{term:#1}{\textbf{#1}}%
+    \label{term:#1}%
+}
+
+% Вывод глоссария
+\newcommand{\printglossary}{%
+    \section*{Глоссарий}
+    \begin{description}
+        \glossaryentries
+    \end{description}
+}
+\makeatother
+
+\title{Техническое задание для языка Zer0}
+\author{Andy Kybik}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Введение}
+
+В тексте используется \term{Латех}{система компьютерной вёрстки}, а также \term{PDF}{формат документов}.
+
+\printglossary
+
+\end{document}
